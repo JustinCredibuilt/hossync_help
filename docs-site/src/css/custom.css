@@ -1,0 +1,68 @@
+:root {
+  --ifm-color-primary: #0f6d66;
+  --ifm-color-primary-dark: #0d615b;
+  --ifm-color-primary-darker: #0c5c56;
+  --ifm-color-primary-darkest: #0a4c47;
+  --ifm-color-primary-light: #117970;
+  --ifm-color-primary-lighter: #127e75;
+  --ifm-color-primary-lightest: #17948a;
+  --ifm-background-color: #f6f4ee;
+  --ifm-font-family-base: "Trebuchet MS", "Segoe UI", sans-serif;
+  --ifm-font-family-monospace: "Consolas", "Courier New", monospace;
+  --ifm-navbar-background-color: rgba(246, 244, 238, 0.96);
+  --ifm-footer-background-color: #17312d;
+  --ifm-heading-color: #16302c;
+  --ifm-link-color: #0c5c56;
+  --ifm-code-font-size: 95%;
+  --ifm-global-radius: 14px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(circle at top right, rgba(215, 167, 90, 0.18), transparent 24%),
+    linear-gradient(180deg, #fcfbf7 0%, #f6f4ee 100%);
+}
+
+.navbar {
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(22, 48, 44, 0.08);
+}
+
+.navbar__brand {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.theme-doc-sidebar-container {
+  background: rgba(255, 255, 255, 0.72);
+  border-right: 1px solid rgba(22, 48, 44, 0.08);
+}
+
+.theme-doc-markdown {
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(22, 48, 44, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 20px 45px rgba(23, 49, 45, 0.08);
+  padding: 2rem;
+}
+
+.pagination-nav__link,
+.table-of-contents__link,
+.menu__link {
+  border-radius: 12px;
+}
+
+.footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 996px) {
+  .theme-doc-markdown {
+    padding: 1.25rem;
+    border-radius: 18px;
+  }
+}

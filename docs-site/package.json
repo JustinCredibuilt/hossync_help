@@ -1,0 +1,20 @@
+{
+  "name": "hossync-docs-site",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "docusaurus start --host 0.0.0.0 --port 3001",
+    "build": "docusaurus build",
+    "serve": "docusaurus serve",
+    "deploy": "gh-pages -d build",
+    "clear": "docusaurus clear"
+  },
+  "dependencies": {
+    "@docusaurus/core": "^3.0.0",
+    "@docusaurus/preset-classic": "^3.0.0",
+    "gh-pages": "^6.3.0",
+    "prism-react-renderer": "^2.4.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
