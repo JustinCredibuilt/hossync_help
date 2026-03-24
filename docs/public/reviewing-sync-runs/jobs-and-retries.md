@@ -12,6 +12,7 @@ The **Jobs** page is the main place to investigate failures.
 - run status
 - live vs dry-run mode
 - trigger source
+- retry state and next retry time
 - created, started, and finished timestamps
 - related operations
 - filtered run logs by level
@@ -26,6 +27,8 @@ The **Jobs** page is the main place to investigate failures.
 4. Confirm whether the issue is credentials, provider behavior, or data quality.
 5. Retry the full run or payroll stage after fixing the issue.
 
+Retry actions require active ELD and payroll connections in **Settings**.
+
 ![Jobs page filtered to failed runs with error logs visible](./images/jobs-error-logs.png)
 
 ## Forced dry runs
@@ -33,3 +36,12 @@ The **Jobs** page is the main place to investigate failures.
 Some runs can be forced into dry-run mode because of billing or grace-period conditions. The run detail panel shows this state so you can distinguish a product safeguard from a normal live run.
 
 ![Run detail panel showing a forced dry run state](./images/jobs-forced-dry-run.png)
+
+## Retry states
+
+The run list and detail panel can show retry progress:
+
+- `Retry scheduled`
+- `Retrying`
+- `Retry exhausted`
+- `Recovered after retry`

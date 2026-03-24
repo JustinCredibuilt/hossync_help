@@ -21,12 +21,14 @@ The dashboard gives you the fastest view of current sync health.
 - `Run sync now`: queues a live sync
 - `Dry run`: validates workflow without posting payroll entries
 - `Review failures`: opens failed jobs
-- `Trips needing attention`: opens trip records that need remediation
+- `Hours needing attention`: opens HOS records that need remediation
 
 ![Dashboard actions for live sync, dry run, failures, and trips needing attention](./images/dashboard-actions.png)
 
 ## Recommended operating pattern
 
 Use dry runs for first-time setup, credential changes, and major mapping changes. Use live sync once connections and mappings are stable.
+
+If billing status or grace-period rules block live payroll posting, the queued run can be forced into dry-run mode and the dashboard message will call that out.
 
 ![Dashboard run mode menu expanded to compare Dry run and Run sync now](./images/dashboard-run-mode-dropdown.png)

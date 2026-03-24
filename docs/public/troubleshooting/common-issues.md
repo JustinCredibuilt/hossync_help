@@ -12,6 +12,8 @@ Check that:
 - you have an active ELD connection
 - you have an active payroll connection
 - both connections have passed their tests
+- you are signed in with an owner or admin role
+- if using Samsara, OAuth is connected before testing or running
 
 ![Settings page showing active, tested ELD and Payroll connections](./images/settings-connections-active-and-tested.png)
 
@@ -32,6 +34,10 @@ Open **Jobs**, select the failed run, and inspect:
 If the logs point to authentication or provider errors, retest the affected connection in **Settings**.
 
 ![Jobs page showing a failed run with logs, related operations, and timeline context](./images/jobs-failed-run-detail.png)
+
+## Samsara shows connected but still will not run
+
+If the ELD connection shows an OAuth-related status such as `connected, needs test` or `oauth ok, test failed`, open **Settings**, rerun the connection test, and correct any OAuth or payroll attribute issues shown in the connection panel.
 
 ## Billing forced a dry run
 

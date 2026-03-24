@@ -9,14 +9,17 @@ HOSSync is designed for business use and operational accountability.
 
 ## Role-sensitive actions
 
-Some actions are limited by tenant role. For example, billing management is reserved for tenant owners and admins.
+Tenant role affects what you can change:
+
+- `owner` and `admin` can manage provider connections, run connection tests, change sync settings, queue manual syncs, retry failed runs, update driver overrides, and manage billing
+- `member` and `viewer` can review operational data, but write actions are blocked
 
 ## Authentication expectations
 
 - use individual user accounts
 - protect credentials and integration secrets
 - remove access promptly for former team members
-- follow your organization’s MFA and credential-rotation policies
+- complete MFA enrollment and verification when prompted during sign-in
 
 ## Integration secrets
 

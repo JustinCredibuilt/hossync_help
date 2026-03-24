@@ -17,13 +17,18 @@ Go to **Settings** and confirm you can access these sections:
 - Notifications
 - Billing
 
-If you cannot access billing, your tenant role may not allow subscription management.
+Only tenant `owner` and `admin` roles can save settings, test connections, queue syncs, and manage billing.
 
 ![Settings overview with ELD, Payroll, Sync Configuration, Notifications, and Billing sections](./images/settings-overview.png)
 
 ## 2. Add provider connections
 
-Create one active ELD connection and one active payroll connection. Save both connections, then run a connection test after entering credentials.
+Create one active ELD connection and one active payroll connection.
+
+- ELD: `Samsara` or `Motive`
+- Payroll: `ADP`
+
+Save both connections, complete Samsara OAuth if applicable, then run a connection test for each one.
 
 ![Settings page showing the ELD and Payroll provider sections](./images/settings-eld-and-payroll-cards.png)
 
@@ -32,13 +37,20 @@ Create one active ELD connection and one active payroll connection. Save both co
 In **Sync Configuration**, set:
 
 - timezone
-- schedule frequency
+- daily scheduled run time
 - lookback days
-- platform log window
+- status gap minutes
 - optional driver tags
 - optional selected drivers list
+- whether scheduled runs should post to payroll
 
-These settings determine which records HOSSync pulls and when scheduled runs occur.
+In **Notifications**, add any report destinations you need:
+
+- webhook
+- Teams connector
+- email recipient list
+
+These settings determine which records HOSSync pulls, when scheduled runs occur, and where run reports are delivered.
 
 ![Sync Configuration section showing timezone, schedule settings, lookback days, and platform log window](./images/settings-sync-configuration.png)
 
@@ -57,5 +69,7 @@ From the dashboard, choose **Dry run** before your first live sync. This lets yo
 ## 6. Move to live sync
 
 When the dry run looks correct, return to the dashboard and choose **Run sync now**.
+
+If the product reports a forced dry run, review billing or grace-period state before expecting payroll posting.
 
 ![Operational dashboard showing the Run sync now action for live processing](./images/dashboard-live-run-action.png)

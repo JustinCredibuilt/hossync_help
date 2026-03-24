@@ -1,13 +1,14 @@
 # Notification System Guide
 
-This document describes how to integrate notifications into edge functions and the frontend.
+This document describes how notifications work in the current platform code.
 
 ## Overview
 
-The notification system has two components:
+The notification system has two layers:
 
-1. **Backend notifications** - Created via edge functions using the `createNotification()` helper. These are persisted in the database and appear in the user's notification bell.
-2. **Frontend notifications** - Created via `addNotification()` in the context. These appear immediately but are not persisted (useful for inline feedback).
+1. **Backend notifications** are stored in the database and appear in the notification bell.
+2. **Frontend notifications** show immediately in the UI through the notification context.
+3. `addNotification()` is no longer purely local. It writes locally first, then attempts backend persistence in the background.
 
 ## Backend: Creating Notifications in Edge Functions
 
@@ -18,7 +19,6 @@ All edge functions should import the `createNotification` helper from `_shared/n
 ```typescript
 import { createNotification } from "../_shared/notifications.ts";
 
-// In your handler function, after the operation completes:
 await createNotification(adminClient, {
   userId: auth.userId,
   tenantId: tenant.tenantId,
@@ -29,9 +29,9 @@ await createNotification(adminClient, {
 
 ### Notification Types
 
-- `"success"` - Green badge, used for successful operations
-- `"error"` - Red badge, used for failures or alerts
-- `"info"` - Blue badge, used for informational messages
+- `"success"` for successful operations
+- `"error"` for failures or alerts
+- `"info"` for informational updates
 
 ### Creating Tenant-Wide Notifications
 
@@ -48,32 +48,7 @@ await createTenantNotification(
 );
 ```
 
-### Example: Sync Completion Notification
-
-```typescript
-// After successful driver sync
-const result = await syncDrivers(/* ... */);
-
-if (result.success) {
-  await createNotification(adminClient, {
-    userId: auth.userId,
-    tenantId: tenant.tenantId,
-    type: "success",
-    message: `Synced ${result.driverCount} drivers successfully.`,
-  });
-} else {
-  await createNotification(adminClient, {
-    userId: auth.userId,
-    tenantId: tenant.tenantId,
-    type: "error",
-    message: `Driver sync failed: ${result.error}`,
-  });
-}
-```
-
 ## Frontend: Creating Notifications
-
-### From Pages/Components
 
 Use the `useNotifications()` hook in components:
 
@@ -85,12 +60,10 @@ export default function MyPage() {
 
   async function handleAction() {
     try {
-      // For immediate UI feedback (not persisted):
       addNotification("info", "Processing your request...");
 
       const result = await myApiCall();
 
-      // For persistent notifications (saved in database):
       await addPersistentNotification("success", "Request processed successfully!");
     } catch (error) {
       addNotification("error", error.message);
@@ -99,79 +72,51 @@ export default function MyPage() {
 }
 ```
 
-### Types of Frontend Notifications
+### Frontend behaviors
 
-1. **Local Notifications** - Use `addNotification()` for immediate feedback
-   - Displayed instantly
-   - Not persisted in database
-   - Lost on page refresh
-   - Good for: form validation, loading states, quick feedback
+1. **`addNotification()`**
+   - displays immediately
+   - writes to local state and `localStorage`
+   - attempts backend persistence through `notifications-create`
 
-2. **Persistent Notifications** - Use `addPersistentNotification()` for important updates
-   - Persisted in database
-   - Visible in notification bell
-   - Survive page refresh/logout
-   - Good for: operation results, errors, important updates
+2. **`addPersistentNotification()`**
+   - calls the backend first
+   - refreshes bell data from the database after success
+   - falls back to `addNotification()` if backend persistence fails
 
-## Where Notifications Should Be Added
+## Current Backend Endpoints
 
-### Edge Functions
+- `notifications`: returns unread notifications for the current user, limited to 100
+- `notifications-create`: creates a notification for the current user in the current tenant
+- `notifications-notification_id-read`: marks one notification as read
 
-These operations should create notifications:
-
-- ✅ Successful sync completion
-- ✅ Sync failures or errors
-- ✅ Important configuration changes
-- ✅ Driver mapping updates
-- ✅ Connection status changes
-- ✅ Job completions
-- ❌ Routine validation errors (return via response instead)
-- ❌ Every step of a multi-step process (too noisy)
-
-### Frontend Pages
-
-Currently, the following pages use notifications:
+## Current Implementation Notes
 
 - **Settings Page** (`frontend/src/app/(app)/settings/page.tsx`)
-  - Uses `addNotification()` for form validation and data load errors
-  - Should migrate to `addPersistentNotification()` for important operations
+  - uses `addNotification()` for save, test, and OAuth feedback
 
 - **Home Page** (`frontend/src/app/(app)/page.tsx`)
-  - Uses local state for sync messages
-  - Should use notifications for sync results
+  - still uses local page state for sync queue feedback
 
-- **Queue Viewer** (`frontend/src/app/(app)/queue-viewer/page.tsx`)
-  - Currently uses local state
-  - Should use notifications for queue processing results
-
-## Migration Plan
-
-To integrate the new notification system into existing operations:
-
-1. **Run Sync** - Create notification when sync completes (success/error)
-2. **Connection Tests** - Create notification for test results
-3. **Driver Mapping** - Create notification when mappings are updated
-4. **Settings Save** - Create persistent notification for settings updates
-5. **Operations** - Create notification when operations complete
+- **Notification context** (`frontend/src/components/notification/notification-context.tsx`)
+  - fetches notifications after auth is ready and MFA is satisfied
+  - caches notifications in `localStorage`
+  - supports optimistic local display before persistence completes
 
 ## Architecture
 
-```
-Frontend Component
-    ↓
-useNotifications() hook
-    ├─ addNotification() → LocalStorage (temporary)
-    └─ addPersistentNotification() → Edge Function
-            ↓
-    notifications-create Edge Function
-            ↓
-    createNotification() helper → Database
-            ↓
-    Notification appears in bell
+```text
+Frontend component
+  -> useNotifications()
+  -> local state and localStorage cache
+  -> notifications-create edge function when persistence is attempted
+  -> createNotification() helper
+  -> database row appears in bell
 ```
 
 The notification bell automatically:
-- Fetches notifications on app load via the `notifications` Edge Function
-- Caches in localStorage for quick access
-- Allows marking as read
-- Shows unread count badge
+
+- fetches unread notifications on app load once auth is ready and MFA is satisfied
+- caches notifications in `localStorage`
+- allows marking notifications as read
+- shows an unread count badge

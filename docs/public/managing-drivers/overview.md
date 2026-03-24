@@ -21,7 +21,7 @@ The **Drivers** page is where you confirm that synced drivers are ready for payr
 
 - `Mapped`: the driver has both an ELD ID and a payroll ID
 - `Unmapped payroll`: the driver is missing a payroll ID
-- `Missing ELD ID`: the driver record is incomplete at the source side
+- ELD ID gaps are also highlighted directly in the driver list
 
 Drivers without payroll IDs are a common reason for incomplete sync output.
 
@@ -30,5 +30,7 @@ Drivers without payroll IDs are a common reason for incomplete sync output.
 ## Manual overrides
 
 If a driver's source status is not what you need operationally, you can apply a manual status override. Resetting the override returns the driver to inherited source behavior.
+
+Manual driver sync and override changes are admin-only actions.
 
 ![Driver detail panel showing the manual status override controls](./images/driver-detail-manual-override.png)
