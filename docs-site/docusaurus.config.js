@@ -47,7 +47,7 @@ const config = {
   themeConfig: {
     image: "img/social-card.svg",
     navbar: {
-      title: "HOSSync Docs",
+      title: "Docs",
       logo: {
         alt: "HOSSync",
         src: "img/logo.svg"
